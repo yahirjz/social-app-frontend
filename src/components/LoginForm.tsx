@@ -19,6 +19,7 @@ export const LoginForm = () => {
             // Limpiadores de los inputs
             setEmail("");
             setPassword("");
+            //cambiamos ruta
             navigate('/feed');
 
         } else {
@@ -36,7 +37,8 @@ export const LoginForm = () => {
                     id="emailInput"
                     className=" border-1 border-purple-500 rounded-lg"
                     type="text"
-                    value={email} onChange={(e) => setEmail(e.target.value)}
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)}
                     required />
             </div>
 
@@ -46,7 +48,8 @@ export const LoginForm = () => {
                     id="passwordInput"
                     className=" border-1 border-purple-500 rounded-lg"
                     type="password"
-                    value={password} onChange={(e) => setPassword(e.target.value)}
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)}
                     required />
             </div>
             <div className="flex justify-end mt-4">
