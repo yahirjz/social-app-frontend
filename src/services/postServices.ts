@@ -6,13 +6,27 @@ export const getServices = async () =>{
     //obtenemos el token que nos dara acceso
     const token = localStorage.getItem('token');
     try{
-        const resGet = await axios.get( API_URL + "/feed",{
+        const allPost = await axios.get( API_URL + "/feed",{
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        return resGet;
+        return allPost;
     }catch(error){
         console.log(error)
+    }
+}
+
+export const getMyPost = async () => {
+    const token = localStorage.getItem('token');
+    try{
+        const myPosts = await axios.get(API_URL + "/post",{
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return myPosts;
+    }catch(error){
+        console.log(error);
     }
 }

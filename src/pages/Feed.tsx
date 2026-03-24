@@ -17,7 +17,7 @@ const Feed = () => {
     useEffect(()=>{
         const fetchPosts = async () =>{
             const response = await getServices()
-            console.log("Datos del backend:", response?.data); 
+            
             //Validadmos que tengamos datos
             if(response && response.data){
                 setData(response.data);
