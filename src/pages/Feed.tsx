@@ -1,6 +1,7 @@
-import { getServices } from "../services/postServices";
+import { followUser, getServices } from "../services/postServices";
 import { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
+import { CreatePost } from "../components/CreatePost";
 
 export interface Post {
     id:string,
@@ -8,22 +9,27 @@ export interface Post {
     img_url: string | null,
     User: {
         username: string,
-        foto_url: string | null
+        foto_url: string | null,
+        user_id: string
     }
 }
 const Feed = () => {
-    
+    const miId = localStorage.getItem('my_user_id');
     const [ data, setData ] = useState<Post[]>([]);
-
-    useEffect(()=>{
-        const fetchPosts = async () =>{
-            const response = await getServices()
-            
-            //Validadmos que tengamos datos
-            if(response && response.data){
-                setData(response.data);
-            }
+    // funcion para obtener todos los posts
+    const fetchPosts = async () =>{
+        const response = await getServices()
+        if(response && response.data){
+            setData(response.data);
         }
+    }
+
+    //funcion para seguir
+    const handelFollow = async (usesId: string) =>{
+        await followUser(usesId);
+        alert(" Ahora sigues al ususario ");
+    }
+    useEffect(()=>{
         fetchPosts();
     }, []);
 
@@ -34,6 +40,8 @@ const Feed = () => {
                 <h1 className="text-3xl font-bold text-slate-800 mb-8 self-start max-w-2xl w-full mx-auto">
                     Últimas Publicaciones
                 </h1>
+
+                <CreatePost onPostCreated={fetchPosts} />
                 
                 <div className="w-full max-w-2xl flex flex-col gap-6">
                     
@@ -62,7 +70,16 @@ const Feed = () => {
                                         )}
                                         {/** Contenedor del username y fecha */}
                                         <div>
-                                            <h3 className="font-semibold text-slate-800">{post.User.username}</h3>
+                                            <div className=" flex items-center">
+                                                <h3 className="font-semibold text-slate-800">{post.User.username}</h3>
+                                                {post.User.user_id !== miId && (
+                                                    <button 
+                                                        onClick={() => handelFollow(post.User.user_id)}
+                                                        className="ml-2 bg-indigo-100 text-indigo-600 hover:bg-indigo-600 hover:text-white px-3 py-1 rounded-full text-xs font-bold transition-colors">
+                                                            Seguir
+                                                    </button>
+                                                )}
+                                            </div>
                                             <p className="text-xs text-slate-400">Hace unas horas</p>
                                         </div>
                                     </div>

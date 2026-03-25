@@ -17,6 +17,7 @@ export const LoginForm = () => {
         //validamor de OK
         if (data.token) {
             localStorage.setItem('token', data.token); //<-- Guardamos el Token en el Storage
+            localStorage.setItem('my_user_id',data.user_id);
             // Limpiadores de los inputs
             setEmail("");
             setPassword("");
