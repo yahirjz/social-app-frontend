@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { postUserData } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -31,31 +32,54 @@ export const LoginForm = () => {
 
     return (
         <form className="flex flex-col gap-4 bg-slate-50 p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200 w-full max-w-md mx-auto" onSubmit={sendForm}>
-            <div className=" flex flex-col">
-                <label htmlFor="emailInput" > Email</label>
+            {/* Input de Email */}
+            <div className="flex flex-col gap-1.5">
+                <label htmlFor="emailInput" className="text-sm font-semibold text-slate-700"> Correo Electrónico </label>
                 <input
                     id="emailInput"
-                    className=" border-1 border-purple-500 rounded-lg"
+                    className="border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none rounded-xl px-4 py-2.5 transition-all w-full"
                     type="text"
+                    placeholder="ejemplo@correo.com"
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    required />
+                    required 
+                />
             </div>
 
-            <div className="flex  flex-col ">
-                <label htmlFor="passwordInput"> Contraseña </label>
+            {/* Input de Contraseña */}
+            <div className="flex flex-col gap-1.5">
+                <label htmlFor="passwordInput" className="text-sm font-semibold text-slate-700"> Contraseña </label>
                 <input
                     id="passwordInput"
-                    className=" border-1 border-purple-500 rounded-lg"
+                    className="border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none rounded-xl px-4 py-2.5 transition-all w-full"
                     type="password"
+                    placeholder="••••••••"
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
-                    required />
+                    required 
+                />
             </div>
-            <div className="flex justify-end mt-4">
+
+            {/* Botón Principal (Ancho Completo) */}
+            <div className="mt-6">
                 <button
-                    className="rounded-lg bg-indigo-500 hover:bg-indigo-700 text-white px-6 py-2 font-semibold transition-colors "
-                    disabled={isLoanding}> {isLoanding ? 'Cargando...' : 'Iniciar'} </button>
+                    className={`w-full rounded-xl text-white px-6 py-3 font-bold shadow-md transition-all 
+                        ${isLoanding ? 'bg-indigo-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 hover:shadow-lg'}`}
+                    disabled={isLoanding}> 
+                    {isLoanding ? 'Iniciando sesión...' : 'Entrar a mi cuenta'} 
+                </button>
+            </div>
+
+            {/* Divisor y Enlace de Registro */}
+            <div className="mt-4 pt-4 border-t border-slate-200 text-center">
+                <p className="text-sm text-slate-500"> 
+                    ¿Aún no tienes cuenta?{' '}
+                    <Link 
+                        to="/register"
+                        className="text-indigo-600 font-bold hover:text-indigo-800 transition-colors ml-1 hover:underline">
+                            Regístrate aquí
+                    </Link>
+                </p>
             </div>
         </form>
     )
