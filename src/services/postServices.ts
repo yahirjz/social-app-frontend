@@ -1,19 +1,19 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 //Obtener los post de feed
-export const getServices = async () =>{
+export const getServices = async () => {
     //obtenemos el token que nos dara acceso
     const token = localStorage.getItem('token');
-    try{
-        const allPost = await axios.get( API_URL + "/feed",{
+    try {
+        const allPost = await axios.get(API_URL + "/feed", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
         return allPost;
-    }catch(error){
+    } catch (error) {
         console.log(error)
     }
 }
@@ -21,14 +21,14 @@ export const getServices = async () =>{
 // Obtener mi post
 export const getMyPost = async () => {
     const token = localStorage.getItem('token');
-    try{
-        const myPosts = await axios.get(API_URL + "/post",{
-            headers:{
+    try {
+        const myPosts = await axios.get(API_URL + "/post", {
+            headers: {
                 Authorization: `Bearer ${token}`
             }
         });
         return myPosts;
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
@@ -47,22 +47,22 @@ export const createPost = async (content: string) => {
         return response;
     } catch (error) {
         console.log("Error al crear publicacion:", error);
-        throw error; 
+        throw error;
     }
 }
 
 // Borrar post
-export const deletePost = async(idPost: string) => {
+export const deletePost = async (idPost: string) => {
     const token = localStorage.getItem('token');
-    try{
-        const response = await axios.delete(API_URL +`/post/${idPost}`,{
+    try {
+        const response = await axios.delete(API_URL + `/post/${idPost}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
         return response.data;
-        
-    }catch(error){
+
+    } catch (error) {
         console.log("Error al borrar", error)
     }
 }
@@ -70,14 +70,14 @@ export const deletePost = async(idPost: string) => {
 // Seguir de seguir
 export const unfollowUser = async (userIdUnfollow: string) => {
     const token = localStorage.getItem('token');
-    try{
+    try {
         const response = await axios.delete(API_URL + `/follower/${userIdUnfollow}/unfollow`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
         return response.data;
-    }catch(error){
+    } catch (error) {
         console.error("No se pudo dejar de seguir", error);
     }
 }
@@ -85,12 +85,12 @@ export const unfollowUser = async (userIdUnfollow: string) => {
 // Dejar de seguir
 export const followUser = async (userIdToFollow: string) => {
     const token = localStorage.getItem('token');
-    try{
+    try {
         const response = await axios.post(API_URL + `/follower/${userIdToFollow}/follow`, {}, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
-    }catch(error){
+    } catch (error) {
         console.error("No se pudo seguir", error);
     }
 }
@@ -102,7 +102,7 @@ export const getMyFollows = async () => {
         const response = await axios.get(API_URL + '/follower/following', {
             headers: { Authorization: `Bearer ${token}` }
         });
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error("Error al obtener seguidos", error);
     }
@@ -114,7 +114,7 @@ export const getMyFollowers = async () => {
         const response = await axios.get(API_URL + '/follower/followers', {
             headers: { Authorization: `Bearer ${token}` }
         });
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error("Error al obtener seguidores", error);
     }
