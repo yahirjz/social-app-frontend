@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import { deletePost, getMyPost } from '../services/postServices';
+import { deletePost, getMyPost, getMyFollowers, getMyFollows } from '../services/postServices';
 import { Navbar } from '../components/Navbar';
 
 export interface Post {
@@ -14,7 +14,9 @@ export interface Post {
 
 const Profile = () => {
     const [ data, setData ] = useState<Post[]>([])
-    
+    const [cantSeguidores, setCantSeguidores] = useState<number>(0);
+    const [cantSiguiendo, setCantSiguiendo] = useState<number>(0);
+
     //función para obtener mis post
     const handleGetPost = async () => {
         const resposne = await getMyPost()
@@ -30,9 +32,20 @@ const Profile = () => {
             handleGetPost();
         }
     }
+        // Función para averiguar cuántos me siguen y a cuántos sigo
+    const fetchFollowData = async () => {
+        // Le hablamos a la API
+        const misSeguidos = await getMyFollows();
+        const misSeguidores = await getMyFollowers();
+
+        // El backend responde arreglos en crudo, así que calculamos la cantidad (.length)
+        if (misSeguidos) setCantSiguiendo(misSeguidos.length);
+        if (misSeguidores) setCantSeguidores(misSeguidores.length);
+    }
 
     useEffect( () => {
         handleGetPost();
+        fetchFollowData();
     },[]);
 
 
@@ -53,8 +66,8 @@ const Profile = () => {
 
                             <div className="flex gap-6 mt-4 justify-center sm:justify-start text-sm">
                                 <p><span className="font-bold text-slate-800">{data.length}</span> Posts</p>
-                                <p><span className="font-bold text-slate-800">120</span> Seguidores</p>
-                                <p><span className="font-bold text-slate-800">95</span> Siguiendo</p>
+                                <p><span className="font-bold text-slate-800">{cantSeguidores}</span> Seguidores</p>
+                                <p><span className="font-bold text-slate-800">{cantSiguiendo}</span> Siguiendo</p>
                             </div>
                         </div>
                     </div>

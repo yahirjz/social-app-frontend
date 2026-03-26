@@ -1,4 +1,4 @@
-import { followUser, getServices } from "../services/postServices";
+import { followUser, unfollowUser, getServices, getMyFollows } from "../services/postServices";
 import { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import { CreatePost } from "../components/CreatePost";
@@ -8,14 +8,16 @@ export interface Post {
     content: string,
     img_url: string | null,
     User: {
+        id: string,
         username: string,
-        foto_url: string | null,
-        user_id: string
+        foto_url: string | null
     }
 }
 const Feed = () => {
     const miId = localStorage.getItem('my_user_id');
     const [ data, setData ] = useState<Post[]>([]);
+    const [misSeguidos, setMisSeguidos] = useState<string[]>([]);
+
     // funcion para obtener todos los posts
     const fetchPosts = async () =>{
         const response = await getServices()
@@ -24,13 +26,29 @@ const Feed = () => {
         }
     }
 
+    // Función para IDs
+    const fetchFollows = async () => {
+        const usuariosSeguidos = await getMyFollows();
+        if(usuariosSeguidos){
+            const ids = usuariosSeguidos.map((usuario:any) => usuario.id)
+            setMisSeguidos(ids);
+        } 
+    }
+
     //funcion para seguir
     const handelFollow = async (usesId: string) =>{
         await followUser(usesId);
-        alert(" Ahora sigues al ususario ");
+        fetchFollows();
     }
+    //función para dejar de seguir
+    const handelUnfollow = async (userId: string) => {
+    await unfollowUser(userId);
+    fetchFollows(); 
+    }
+
     useEffect(()=>{
         fetchPosts();
+        fetchFollows();
     }, []);
 
     return(
@@ -72,12 +90,20 @@ const Feed = () => {
                                         <div>
                                             <div className=" flex items-center">
                                                 <h3 className="font-semibold text-slate-800">{post.User.username}</h3>
-                                                {post.User.user_id !== miId && (
-                                                    <button 
-                                                        onClick={() => handelFollow(post.User.user_id)}
-                                                        className="ml-2 bg-indigo-100 text-indigo-600 hover:bg-indigo-600 hover:text-white px-3 py-1 rounded-full text-xs font-bold transition-colors">
+                                               {post.User.id !== miId && (
+                                                    misSeguidos.includes(post.User.id) ? (
+                                                        <button 
+                                                            onClick={() => handelUnfollow(post.User.id)}
+                                                            className="ml-2 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1 rounded-full text-xs font-bold transition-colors">
+                                                            Siguiendo
+                                                        </button>
+                                                    ) : (
+                                                        <button 
+                                                            onClick={() => handelFollow(post.User.id)}
+                                                            className="ml-2 bg-indigo-100 text-indigo-600 hover:bg-indigo-600 hover:text-white px-3 py-1 rounded-full text-xs font-bold transition-colors">
                                                             Seguir
-                                                    </button>
+                                                        </button>
+                                                    )
                                                 )}
                                             </div>
                                             <p className="text-xs text-slate-400">Hace unas horas</p>

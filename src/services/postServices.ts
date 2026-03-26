@@ -71,7 +71,7 @@ export const deletePost = async(idPost: string) => {
 export const unfollowUser = async (userIdUnfollow: string) => {
     const token = localStorage.getItem('token');
     try{
-        const response = await axios.delete(API_URL +`/unfollow/${userIdUnfollow}`,{
+        const response = await axios.delete(API_URL + `/follower/${userIdUnfollow}/unfollow`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -86,11 +86,36 @@ export const unfollowUser = async (userIdUnfollow: string) => {
 export const followUser = async (userIdToFollow: string) => {
     const token = localStorage.getItem('token');
     try{
-        const response = await axios.post(API_URL + `/follow/${userIdToFollow}`, {}, {
+        const response = await axios.post(API_URL + `/follower/${userIdToFollow}/follow`, {}, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
     }catch(error){
         console.error("No se pudo seguir", error);
+    }
+}
+
+// Obtener lista de IDs de followers
+export const getMyFollows = async () => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get(API_URL + '/follower/following', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data; 
+    } catch (error) {
+        console.error("Error al obtener seguidos", error);
+    }
+}
+
+export const getMyFollowers = async () => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get(API_URL + '/follower/followers', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data; 
+    } catch (error) {
+        console.error("Error al obtener seguidores", error);
     }
 }
